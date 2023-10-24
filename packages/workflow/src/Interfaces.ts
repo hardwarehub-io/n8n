@@ -1626,6 +1626,10 @@ export interface IWebhookData {
 	workflowId: string;
 	workflowExecuteAdditionalData: IWorkflowExecuteAdditionalData;
 	webhookId?: string;
+	responseMode: WebhookResponseMode;
+	responseCode: number;
+	responseData: WebhookResponseData;
+	binaryData: boolean;
 }
 
 export interface IWebhookDescription {
@@ -1697,7 +1701,7 @@ export interface IWebhookResponseData {
 }
 
 export type WebhookResponseData = 'allEntries' | 'firstEntryJson' | 'firstEntryBinary' | 'noData';
-export type WebhookResponseMode = 'onReceived' | 'lastNode';
+export type WebhookResponseMode = 'onReceived' | 'lastNode' | 'responseNode';
 
 export interface INodeTypes {
 	getByName(nodeType: string): INodeType | IVersionedNodeType;

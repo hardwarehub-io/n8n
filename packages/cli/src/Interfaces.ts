@@ -266,7 +266,7 @@ export type WaitingWebhookRequest = WebhookRequest & {
 };
 
 export interface IWebhookManager {
-	getWebhookMethods?: (path: string) => Promise<IHttpRequestMethods[]>;
+	getWebhookMethods?: (path: string) => IHttpRequestMethods[];
 	executeWebhook(req: WebhookRequest, res: Response): Promise<IResponseCallbackData>;
 }
 

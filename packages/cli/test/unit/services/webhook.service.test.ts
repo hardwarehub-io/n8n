@@ -1,9 +1,9 @@
 import { v4 as uuid } from 'uuid';
 import config from '@/config';
 import { WebhookRepository } from '@db/repositories/webhook.repository';
-import { CacheService } from '@/services/cache.service';
 import { WebhookService } from '@/services/webhook.service';
 import { WebhookEntity } from '@db/entities/WebhookEntity';
+import { NodeTypes } from '@/NodeTypes';
 import { mockInstance } from '../../shared/mocking';
 
 const createWebhook = (method: string, path: string, webhookId?: string, pathSegments?: number) =>
@@ -15,9 +15,9 @@ const createWebhook = (method: string, path: string, webhookId?: string, pathSeg
 	}) as WebhookEntity;
 
 describe('WebhookService', () => {
+	const nodeTypes = mockInstance(NodeTypes);
 	const webhookRepository = mockInstance(WebhookRepository);
-	const cacheService = mockInstance(CacheService);
-	const webhookService = new WebhookService(webhookRepository, cacheService);
+	const webhookService = new WebhookService(webhookRepository, nodeTypes);
 
 	beforeEach(() => {
 		config.load(config.default);
@@ -136,7 +136,7 @@ describe('WebhookService', () => {
 				createWebhook('PATCH', path),
 			]);
 
-			const returnedMethods = await webhookService.getWebhookMethods(path);
+			const returnedMethods = webhookService.getWebhookMethods(path);
 
 			expect(returnedMethods).toEqual(['GET', 'POST', 'PUT', 'PATCH']);
 		});
@@ -144,7 +144,7 @@ describe('WebhookService', () => {
 		test('should return empty array if no webhooks found', async () => {
 			webhookRepository.find.mockResolvedValue([]);
 
-			const returnedMethods = await webhookService.getWebhookMethods('user/profile');
+			const returnedMethods = webhookService.getWebhookMethods('user/profile');
 
 			expect(returnedMethods).toEqual([]);
 		});
